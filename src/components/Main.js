@@ -1,8 +1,8 @@
 import "../styles/Main.css"
 import List from './List.js'
 import FocusedList from "./FocusedList";
-import {getData} from "../data.js"
-import React, {useState, useEffect} from 'react'
+//import {getData} from "../data.js"
+import React, {useState, /*useEffect*/} from 'react'
 
 export default function Main(){
     const [focusedList, setFocusedList] = useState(-1);
