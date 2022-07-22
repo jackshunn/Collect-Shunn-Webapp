@@ -5,7 +5,7 @@ import Main from './components/Main';
 
 export default function App() {
   return (
-    <div className='h-screen'>
+    <div className='h-screen flex flex-col'>
       <Navbar/>
       <Main />
     </div>
