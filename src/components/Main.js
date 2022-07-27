@@ -1,5 +1,6 @@
 import "../styles/Main.css"
 import List from './List.js'
+import plusIcon from "../images/plus.svg"
 import FocusedList from "./FocusedList";
 //import {getData} from "../data.js"
 import React, {useState, /*useEffect*/} from 'react'
@@ -23,9 +24,15 @@ export default function Main(){
     }
 
     function getLists(){
-        return lists.map( (title, index) => <List key={index} title={title} handleClick={(event) => {
+        let listComponents = lists.map( (title, index) => <List key={index} title={title} handleClick={(event) => {
             handleClick(index)
             event.stopPropagation()}}/>);
+
+        listComponents.push(
+        <div key={listComponents.length} className='border-2 rounded-lg justify-center h-96 max-w-lg list flex flex-col'>
+            <img src={plusIcon} alt="Add New List" className="block mx-auto w-1/2"/>
+        </div>);
+        return listComponents;
     }
 
     function handleOutsideClick(){
