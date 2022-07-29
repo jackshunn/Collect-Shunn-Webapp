@@ -1,4 +1,3 @@
-import "../styles/Main.css"
 import List from './List.js'
 import plusIcon from "../images/plus.svg"
 import FocusedList from "./FocusedList";
@@ -29,8 +28,8 @@ export default function Main(){
             event.stopPropagation()}}/>);
 
         listComponents.push(
-        <div key={listComponents.length} className='border-2 rounded-lg justify-center h-96 max-w-lg list flex flex-col'>
-            <img src={plusIcon} alt="Add New List" className="block mx-auto w-1/2"/>
+        <div key={listComponents.length} className='border-2 rounded-lg justify-center h-96 bg-customColor-lightBlue min-w-min flex flex-col'>
+            <img src={plusIcon} alt="Add New List" className="block mx-auto w-1/2 min-h-full"/>
         </div>);
         return listComponents;
     }
@@ -40,12 +39,14 @@ export default function Main(){
     }
 
     return (
-        <main className='p-16 flex-1' onClick={handleOutsideClick}>
+        <main className='flex-1 flex' onClick={handleOutsideClick}>
             {focusedList === -1 ? 
-                (<div className="flex flex-wrap gap-16">
+                (<div className="flex-1 m-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-16">
                     {getLists()}
                 </div>) :
-                <FocusedList data={lists[focusedList]} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
+                <div className='m-16 flex-1'>
+                    <FocusedList data={lists[focusedList]} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
+                </div>
             }
 
         </main>
