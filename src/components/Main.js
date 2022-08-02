@@ -8,9 +8,31 @@ export default function Main(){
     const [focusedList, setFocusedList] = useState(-1);
     const [data, setData] = useState({user:"", lists:[]})
 
-    useEffect( () => async ()=> {
-        const data = await getData();
-        setData(data)
+
+    useEffect( () => {
+        const func = async ()=> {
+            const data = await getData();
+            console.log(data)
+            setData(data)
+            const body = {
+                "keywords":"the batman",
+                "movies":true,
+                "books":true,
+                "songs":true
+            }
+            const x =await fetch("/api/search",
+            {
+                method:"POST",
+                headers: {
+                    'Content-Type':"application/json"
+                },
+                body: JSON.stringify(body)
+            })
+            const y = await x.json()
+            console.log(y)
+        }
+
+        func()
     }, [])
 
     function handleClick(index) {
@@ -51,7 +73,7 @@ export default function Main(){
                     {getLists()}
                 </div> :
                 <div className='m-16 flex-1 flex'>
-                    <FocusedList list={data.lists.splice(focusedList, 1)[0]} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
+                    <FocusedList list={data.lists[focusedList]} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
                 </div>
             }
         </main>

@@ -1,10 +1,7 @@
-import React, {useState} from "react";
-
-
+import React from "react";
 
 export default function FocusedList(props) {
-    const [list, setList] = useState(props.list)
-    console.log(list)
+
     function handleChange(event){
         setList(prev => {
             let newList = {...prev};
@@ -27,7 +24,6 @@ export default function FocusedList(props) {
                 <input type="date" className="bg-transparent text-white text-xl mx-3"></input>
             </div>
         </div>
-        
     </div>
   );
 }
