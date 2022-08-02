@@ -1,9 +1,6 @@
-import React, {useState} from "react";
-
-
+import React from "react";
 
 export default function FocusedList(props) {
-    const [list, setList] = useState(props.list)
 
     function handleChange(event){
         props.handleChangedData({title:"Title1",items:[{text:event.target.value}]})
@@ -23,7 +20,6 @@ export default function FocusedList(props) {
                 <input type="date" className="bg-transparent text-white text-xl mx-3"></input>
             </div>
         </div>
-        
     </div>
   );
 }

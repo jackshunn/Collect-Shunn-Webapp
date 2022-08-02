@@ -52,7 +52,7 @@ export default function Main(){
                     {getLists()}
                 </div> :
                 <div className='m-16 flex-1 flex'>
-                    <FocusedList list={data.lists.splice(focusedList, 1)} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
+                    <FocusedList list={data.lists[focusedList]} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
                 </div>
             }
         </main>
