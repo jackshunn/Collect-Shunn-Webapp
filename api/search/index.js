@@ -1,33 +1,47 @@
-const fetch = require('node-fetch')
+const fetch = require('node-fetch');
+
+async function callAPI(url){
+    const promise = await fetch(
+        url,
+        {method:"GET"});
+    return await promise.json(); 
+}
+
 
 module.exports = async function (context, req) {
-
-    let promiseList = [];
     if(!req.body || !req.body.keywords)
         throw new Error("Invalid request");
 
+    let promiseList = [];
+    let nameList =[];
+
     if(req.body.movies){
-        const imdbPromise = fetch(`https://imdb-api.com/en/API/SearchMovie/${process.env.IMDB_API_KEY}}/${req.body.keywords}`);
-        promiseList.push(imdbPromise);
+        promiseList.push(
+            callAPI(`https://imdb-api.com/en/API/SearchMovie/${process.env.IMDB_API_KEY}/${req.body.keywords}`)
+        )
+        nameList.push("imdb");
     }
+
     if(req.body.books){
-        const googleBooksPromise = fetch(`https://www.googleapis.com/books/v1/volumes?q=${req.body.keywords}`);
-        promiseList.push(googleBooksPromise);
+        promiseList.push(
+            callAPI(`https://www.googleapis.com/books/v1/volumes?q=${req.body.keywords}`)
+        )
+        nameList.push("googleBooks");
     }
+
     if(req.body.songs){
-        const spotifyPromise = fetch(`https://api.spotify.com/v1/search?q=${req.body.keywords}&type=track&`);
-        promiseList.push(spotifyPromise);
+        promiseList.push(
+            callAPI(`https://api.spotify.com/v1/search?q=${req.body.keywords}&type=track&`)
+        )
+        nameList.push("spotify");
     }
     
-    let resultingJSON;
-    Promise.all(promiseList).then(resolvedPromises => resultingJSON = resolvedPromises.map(item => item.json()))
+    let resultingJSON = await Promise.all(promiseList);
 
+    let resultObject ={};
+    resultingJSON.forEach((value, index) => resultObject[nameList[index]] = value )
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: {
-            spotify: resultingJSON[2],
-            imdb: resultingJSON[0],
-            googleBooks: resultingJSON[1]
-        }
+        body: resultObject
     };
 }
