@@ -8,6 +8,7 @@ export default function Main(){
     const [focusedList, setFocusedList] = useState(-1);
     const [data, setData] = useState({user:"", lists:[]})
 
+
     useEffect( () => {
         const func = async ()=> {
             const data = await getData();
