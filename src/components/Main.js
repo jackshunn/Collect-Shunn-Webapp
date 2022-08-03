@@ -1,40 +1,21 @@
 import List from './List.js'
 import plusIcon from "../images/plus.svg"
 import FocusedList from "./FocusedList";
-import getData from "../data.js"
+import getData from "../functions/data.js"
 import React, {useState, useEffect} from 'react'
 
 export default function Main(){
-    const [focusedList, setFocusedList] = useState(-1);
-    const [data, setData] = useState({user:"", lists:[]})
-
+    const [focusedListIndex, setFocusedList] = useState(-1);
+    const [data, setData] = useState({id:"", lists:[]})
 
     useEffect( () => {
-        const func = async ()=> {
-            const data = await getData();
-            console.log(data)
-            setData(data)
-            const body = {
-                "keywords":"the batman",
-                "movies":true,
-                "books":true,
-                "songs":true
-            }
-            const x =await fetch("/api/search",
-            {
-                method:"POST",
-                headers: {
-                    'Content-Type':"application/json"
-                },
-                body: JSON.stringify(body)
-            })
-            const y = await x.json()
-            console.log(y)
-        }
-
-        func()
+        const asyncFunc = async () => {
+            let databaseData = await getData();
+            setData(databaseData);
+        };
+        asyncFunc();
     }, [])
-
+    
     function handleClick(index) {
         setFocusedList(index)
     }
@@ -68,12 +49,15 @@ export default function Main(){
 
     return (
         <main className='flex-1 flex' onClick={handleOutsideClick}>
-            {focusedList === -1 ? 
+            {focusedListIndex === -1 ? 
                 <div className="flex-1 m-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-16">
                     {getLists()}
                 </div> :
                 <div className='m-16 flex-1 flex'>
-                    <FocusedList list={data.lists[focusedList]} handleChangedData={(change) => handleChangedData(focusedList, change)}/>
+                    <FocusedList 
+                    list={data.lists[focusedListIndex]} 
+                    handleChange={(updatedList) => handleChangedData(focusedListIndex, updatedList)}
+                    />
                 </div>
             }
         </main>
