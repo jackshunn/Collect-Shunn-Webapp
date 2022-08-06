@@ -11,13 +11,13 @@ export default function Item(props) {
     function itemSwitch(){
         switch(props.item.type) {
             case "movie":
-                return <MovieItem />;
+                return <MovieItem item={props.item} handleChange={props.handleChange}/>;
             case "book":
-                return <BookItem />;
+                return <BookItem item={props.item} handleChange={props.handleChange}/>;
             case "song":
-                return <SongItem />;
+                return <SongItem item={props.item} handleChange={props.handleChange}/>;
             case "text":
-                return <TextItem />;
+                return <TextItem item={props.item} handleChange={props.handleChange}/>;
             default:
                 throw new Error("Item type was unexpected")
         }
@@ -25,17 +25,17 @@ export default function Item(props) {
 
     if(expanded){
         return (
-            <div className="flex-1 m-5 rounded-xl h-11 bg-customColor-darkBlue flex">
-                <img src={dropDownArrow} alt=">" onClick={() => setExpanded(prev => !prev)}/>
+            <div className="flex-1 m-5 rounded-xl h-auto bg-customColor-darkBlue flex relative">
+                <img src={dropDownArrow} alt=">" onClick={() => setExpanded(prev => !prev)} className="h-9 absolute top-1"/>
                 {itemSwitch()}
             </div>
         )
     }
     else{
         return (
-            <div className="flex-1 m-5 rounded-xl h-11 bg-customColor-darkBlue flex">
-                <img src={dropDownArrow} alt=">" onClick={() => setExpanded(prev => !prev)}/>
-                <input type="text" className="flex-1 bg-transparent text-white text-xl mx-3" value={props.item.title}></input>
+            <div className="flex-1 m-5 rounded-xl h-11 bg-customColor-darkBlue flex relative">
+                <img src={dropDownArrow} alt=">" onClick={() => setExpanded(prev => !prev)} className="h-9 absolute top-1"/>
+                <input type="text" className="flex-1 bg-transparent text-white text-xl mr-3 ml-6" value={props.item.title}></input>
                 <span className="h-11 w-1 bg-customColor-orange"/>
                 <input type="text" className="flex-1 bg-transparent text-customColor-lightGrey text-xl mx-3" value={props.item.text}></input>
                 <span className="h-11 w-1 bg-customColor-orange"/>

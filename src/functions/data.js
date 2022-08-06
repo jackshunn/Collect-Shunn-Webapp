@@ -27,7 +27,7 @@ export default async function getData(){
                             "author": "Brandon Sanderson",
                             "link": "http://books.google.com/books?id=t_ZYYXZq4RgC&printsec=frontcover&dq=mistborn&hl=&cd=1&source=gbs_api",
                             "image": "http://books.google.com/books/content?id=t_ZYYXZq4RgC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-                            "pageCount": 544
+                            "pageCount": "544"
                         },
                         "date": "2022-07-30"
                     },
@@ -40,7 +40,7 @@ export default async function getData(){
                             "year": "2021",
                             "artist": "Saint Motel",
                             "link": "https://open.spotify.com/track/5K43AHQPTJTqlyRZ3uBGKz?autoplay=true",
-                            "image": "",
+                            "image": "https://images.genius.com/c991ca667ef42567a54b8b4281950d74.1000x1000x1.png",
                             "album": "The Original Motion Picture Soundtrack"
                         },
                         "date": "2022-07-30"
