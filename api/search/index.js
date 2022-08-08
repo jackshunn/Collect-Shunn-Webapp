@@ -11,16 +11,15 @@ async function formatImdbResponse(searchJSON){
         movieObject.text = titleJSON.plot;
         return movieObject;
         };
-
     const loopLength = Math.max(ITEM_LIMIT, searchJSON.results.length);
     let promiseList = [];
 
     for(let i=0; i < loopLength; i++){
-        const {id, image, title, description} = searchJSON.results;
+        const {id, image, title, description} = searchJSON.results[i];
         let movieObject = {
             image:image,
             title:title,
-            year:description.slice(1,description.length-1),
+            year:description.slice(1,5),
             link:`https://www.imdb.com/title/${id}`
         }
 
@@ -108,7 +107,7 @@ module.exports = async function (context, req) {
     if(req.body.movies){
 
         promiseList.push(
-            callImdbAPI()
+            callImdbAPI(req.body.keywords)
         )
         nameList.push("imdb");
     }
