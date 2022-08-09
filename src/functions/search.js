@@ -1,19 +1,18 @@
-async function temp(){
-    const data = await getData();
-    console.log(data)
-    setData(data)
+export default async function callSearchAPI(keywords, searchTypes, callBackFunction){
     const body = {
-        "keywords":"the batman",
-        "movies":true,
-        "books":true,
-        "songs":true
+        "keywords":keywords,
+        "movies":searchTypes.movies ?? false,
+        "books":searchTypes.books ?? false,
+        "songs":searchTypes.songs ?? false
     }
-    const x =await fetch("/api/search",
+    const searchResults = await fetch("/api/search",
     {
-        method:"POST",
+        method:"GET",
         headers: {
             'Content-Type':"application/json"
         },
         body: JSON.stringify(body)
-    }
+    });
+    const searchResultsJSON = searchResults.json();
+    callBackFunction(searchResultsJSON);
 }
