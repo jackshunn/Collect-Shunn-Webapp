@@ -1,23 +1,49 @@
-import List from './List.js'
-import plusIcon from "../images/plus.svg"
+import List from './List.js';
+
+import saveIcon from "../images/floppy-disk-solid.svg";
 import FocusedList from "./FocusedList";
-import getData from "../functions/data.js"
-import React, {useState, useEffect} from 'react'
+import getDataFromDB from "../functions/requestdata.js";
+import saveDataToDB from '../functions/saveData.js';
+import React, {useState, useEffect} from 'react';
+import AddListBox from './AddListBox.js';
+
 
 export default function Main(){
-    const [focusedListIndex, setFocusedList] = useState(-1);
-    const [data, setData] = useState({id:"", lists:[]})
-
+    const [focusedListIndex, setFocusedListIndex] = useState(-1);
+    const [data, setData] = useState({id:"", lists:[]});
+    const [unsavedChanges, setUnsavedChanges] = useState(false);
+    
     useEffect( () => {
         const asyncFunc = async () => {
-            let databaseData = await getData();
+            let databaseData = await getDataFromDB();
             setData(databaseData);
         };
         asyncFunc();
     }, [])
+
+    function saveData(event){
+        saveDataToDB(data);
+        setUnsavedChanges(false);
+        event.stopPropagation();
+    }
+
+    function addNewList(title){
+        const numberOfListsBeforeAddingOne = data.lists.length;
+        setData(prev => {
+            return ({
+                ...prev,
+                lists: prev.lists.concat({
+                    title:title,
+                    items:[]
+                }),
+            })
+        })
+        setUnsavedChanges(true);
+        setFocusedListIndex(numberOfListsBeforeAddingOne);
+    }
     
     function handleClick(index) {
-        setFocusedList(index)
+        setFocusedListIndex(index)
     }
 
     function handleChangedData(index, changedList) {
@@ -28,6 +54,7 @@ export default function Main(){
             lists: newLists,
             })
         })
+        setUnsavedChanges(true)
     }
 
     function getLists(){
@@ -37,27 +64,30 @@ export default function Main(){
             );
 
         listComponents.push(
-        <div key={listComponents.length} className='border-2 rounded-lg justify-center h-96 bg-customColor-lightBlue min-w-min flex flex-col'>
-            <img src={plusIcon} alt="Add New List" className="block mx-auto w-1/2 min-h-full"/>
-        </div>);
+        <AddListBox key={"addbox" + listComponents.length} addNewList={addNewList}/>);
         return listComponents;
     }
 
     function handleOutsideClick(){
-        setFocusedList(-1)
+        setFocusedListIndex(-1)
     }
 
     return (
-        <main className='flex-1 flex' onClick={handleOutsideClick}>
+        <main className='flex-1 flex relative' onClick={handleOutsideClick}>
             {focusedListIndex === -1 ? 
                 <div className="flex-1 m-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-16">
                     {getLists()}
                 </div> :
-                <div className='m-16 flex-1 flex'>
+                <div className='p-16 flex-1 flex w-screen'>
                     <FocusedList 
                     list={data.lists[focusedListIndex]} 
                     handleChange={(updatedList) => handleChangedData(focusedListIndex, updatedList)}
                     />
+                </div>
+            }
+            {unsavedChanges && 
+                <div  onClick={saveData} className="h-12 absolute top-3 right-3 bg-customColor-orange p-1.5 rounded-full">
+                    <img className="h-full"src={saveIcon} alt="SAVE WORK"/>
                 </div>
             }
         </main>

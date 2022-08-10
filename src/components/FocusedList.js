@@ -42,7 +42,7 @@ export default function FocusedList(props) {
     }
 
     return (
-    <div className="py-9 rounded-lg  bg-customColor-lightBlue flex flex-col flex-1" onClick={handleInsideClick}>
+    <div className="py-9 rounded-lg  bg-customColor-lightBlue flex flex-col flex-1 max-w-full" onClick={handleInsideClick}>
         <ResizeTextBox className="mx-14 font-bold text-2xl text-customColor-orange bg-transparent" value={props.list.title} onChange={handleTitleChange}/>
         <div className="flex flex-col">
             {generateItems()}

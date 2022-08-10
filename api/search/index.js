@@ -11,7 +11,7 @@ async function formatImdbResponse(searchJSON){
         movieObject.text = titleJSON.plot;
         return movieObject;
         };
-    const loopLength = Math.max(ITEM_LIMIT, searchJSON.results.length);
+    const loopLength = Math.min(ITEM_LIMIT, searchJSON.results.length);
     let promiseList = [];
 
     for(let i=0; i < loopLength; i++){
@@ -34,7 +34,7 @@ function formatGoogleBooksResponse(searchJSON){
         return {
             title: book.volumeInfo.title + (book.volumeInfo.subtitle ? ": " + book.volumeInfo.subtitle : ""),
             year: book.volumeInfo.publishedDate.slice(0,4),
-            author: book.volumeInfo.authors[0],
+            author: book.volumeInfo?.authors?.[0] ?? "~No Author~",
             link: `http://books.google.com/books?id=${book.id}`,
             image: book.volumeInfo.imageLinks.thumbnail,
             pageCount: book.volumeInfo.pageCount.toString(),
