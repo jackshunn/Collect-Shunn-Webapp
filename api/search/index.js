@@ -98,7 +98,8 @@ async function callSpotifyAPI(query){
 
 
 module.exports = async function (context, req) {
-    if(!req.body || !req.body.keywords)
+    try{
+       if(!req.body || !req.body.keywords)
         throw new Error("Invalid request");
 
     let promiseList = [];
@@ -133,5 +134,13 @@ module.exports = async function (context, req) {
     context.res = {
         // status: 200, /* Defaults to 200 */
         body: resultObject
-    };
+    }; 
+    } 
+    catch (error) {
+        context.res = {
+            error: error.message,
+            stack: error.stack
+        }
+    }
+    
 }
