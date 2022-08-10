@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 const fetch = require('node-fetch');
 const ITEM_LIMIT = 5;
 
@@ -98,43 +99,48 @@ async function callSpotifyAPI(query){
 
 
 module.exports = async function (context, req) {
+    context.res = {
+        error: context,
+        stack: req
+    };
+    return;
     try{
        if(!req.body || !req.body.keywords)
         throw new Error("Invalid request");
 
-    let promiseList = [];
-    let nameList =[];
+        let promiseList = [];
+        let nameList =[];
 
-    if(req.body.movies){
+        if(req.body.movies){
 
-        promiseList.push(
-            callImdbAPI(req.body.keywords)
-        )
-        nameList.push("imdb");
-    }
+            promiseList.push(
+                callImdbAPI(req.body.keywords)
+            )
+            nameList.push("imdb");
+        }
 
-    if(req.body.books){
-        promiseList.push(
-            callGoogleBooksAPI(req.body.keywords)
-        )
-        nameList.push("googleBooks");
-    }
+        if(req.body.books){
+            promiseList.push(
+                callGoogleBooksAPI(req.body.keywords)
+            )
+            nameList.push("googleBooks");
+        }
 
-    if(req.body.songs){
-        promiseList.push(
-            callSpotifyAPI(req.body.keywords)
-        )
-        nameList.push("spotify");
-    }
-    
-    let resultingJSON = await Promise.all(promiseList);
+        if(req.body.songs){
+            promiseList.push(
+                callSpotifyAPI(req.body.keywords)
+            )
+            nameList.push("spotify");
+        }
+        
+        let resultingJSON = await Promise.all(promiseList);
 
-    let resultObject ={};
-    resultingJSON.forEach((value, index) => resultObject[nameList[index]] = value )
-    context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: resultObject
-    }; 
+        let resultObject ={};
+        resultingJSON.forEach((value, index) => resultObject[nameList[index]] = value )
+        context.res = {
+            // status: 200, /* Defaults to 200 */
+            body: resultObject
+        }; 
     } 
     catch (error) {
         context.res = {
