@@ -98,49 +98,43 @@ async function callSpotifyAPI(query){
 
 
 module.exports = async function (context, req) {
-    try{
-       if(!req.body || !req.body.keywords)
-        throw new Error("Invalid request");
+    if(!req.body || !req.body.keywords){
+        context.res = {body:"request body failure"};
+        return;
+    }
 
-        let promiseList = [];
-        let nameList =[];
 
-        if(req.body.movies){
+    let promiseList = [];
+    let nameList =[];
 
-            promiseList.push(
-                callImdbAPI(req.body.keywords)
-            )
-            nameList.push("imdb");
-        }
+    if(req.body.movies){
 
-        if(req.body.books){
-            promiseList.push(
-                callGoogleBooksAPI(req.body.keywords)
-            )
-            nameList.push("googleBooks");
-        }
+        promiseList.push(
+            callImdbAPI(req.body.keywords)
+        )
+        nameList.push("imdb");
+    }
 
-        if(req.body.songs){
-            promiseList.push(
-                callSpotifyAPI(req.body.keywords)
-            )
-            nameList.push("spotify");
-        }
-        
-        let resultingJSON = await Promise.all(promiseList);
+    if(req.body.books){
+        promiseList.push(
+            callGoogleBooksAPI(req.body.keywords)
+        )
+        nameList.push("googleBooks");
+    }
 
-        let resultObject ={};
-        resultingJSON.forEach((value, index) => resultObject[nameList[index]] = value )
-        context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: resultObject
-        }; 
-    } 
-    catch (error) {
-        context.res = {
-            error: error.message,
-            stack: error.stack
-        }
+    if(req.body.songs){
+        promiseList.push(
+            callSpotifyAPI(req.body.keywords)
+        )
+        nameList.push("spotify");
     }
     
+    let resultingJSON = await Promise.all(promiseList);
+
+    let resultObject ={};
+    resultingJSON.forEach((value, index) => resultObject[nameList[index]] = value )
+    context.res = {
+        // status: 200, /* Defaults to 200 */
+        body: resultObject
+    }; 
 }
