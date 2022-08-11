@@ -1,13 +1,10 @@
 const { CosmosClient } = require('@azure/cosmos');
 
-
 const endpoint = process.env.COSMOS_ENDPOINT;
 const key = process.env.COSMOS_KEY;
 const client = new CosmosClient({ endpoint, key });
 const databaseID = 'users-data';
 const containerID= 'data';
-// partitionKey: { kind: 'Hash', paths: ['/secrets'] },
-
 
 module.exports = async function (context, req) {
     
@@ -16,11 +13,20 @@ module.exports = async function (context, req) {
     const { container } = await database.containers.createIfNotExists({ id: containerID });
 
     const item =  await container.item("jackshunn", "jackshunn");
-    const {resource} = await item.read();
-    context.log(resource);
-
-    
-    context.res.json({
-        ...resource
-    });
+    switch (req.method) {
+        case "GET":
+            const {resource} = await item.read();
+            context.res.json({
+                ...resource
+            });
+            break;
+        case "POST":
+            await item.replace(req.body);
+            break;
+        default:
+            context.res = {
+                status: 405,
+                body: "Method Not Allowed"
+            }
+    }   
 }

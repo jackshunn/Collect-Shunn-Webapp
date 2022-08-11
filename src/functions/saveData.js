@@ -1,3 +1,7 @@
 export default async function saveDataToDB(dataToSave){
-    console.log("saved" + JSON.stringify(dataToSave));
+    await fetch("/api/data",
+    {
+        method:"POST",
+        body: JSON.stringify(dataToSave)
+    });   
 }
