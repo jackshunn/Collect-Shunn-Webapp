@@ -98,10 +98,10 @@
 
 
 module.exports = async function (context, req) {
-    context.res = {
+    context.res.json({
         error: context,
         stack: req
-    };
+    });
 }
 //     return;
 //     try{
