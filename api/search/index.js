@@ -34,7 +34,7 @@ function formatGoogleBooksResponse(searchJSON){
         return {
             title: book.volumeInfo.title + (book.volumeInfo.subtitle ? ": " + book.volumeInfo.subtitle : ""),
             year: book.volumeInfo.publishedDate.slice(0,4),
-            author: book.volumeInfo?.authors?.[0] ?? "~No Author~",
+            author: book.volumeInfo.authors && book.volumeInfo.authors[0] ? book.volumeInfo.authors[0] : "~No Author~",
             link: `http://books.google.com/books?id=${book.id}`,
             image: book.volumeInfo.imageLinks.thumbnail,
             pageCount: book.volumeInfo.pageCount.toString(),
