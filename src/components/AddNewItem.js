@@ -66,11 +66,7 @@ export default function AddNewItem(props){
                     <span className="mx-3 text-white">Search</span>
                     <input value={search} onChange={event => setSearch(event.target.value)} onKeyDown={searchOnEnterPressed} type="text" className="flex-1 bg-transparent border border-black rounded-md text-white" placeholder="Title (year)"></input>
                 </div>
-                {search && !searchResults && 
-                    <div>
-                        <p>Hit enter to search</p>
-                    </div>
-                }
+                {search && !searchResults && <div className="text-red-600 text-lg ml-44">Hit enter to search</div>}
                 {searchResults &&
                     <div className="flex gap-3 overflow-auto mx-3 max-w-full">
                         {generateSearchResultComponents(searchResults)}

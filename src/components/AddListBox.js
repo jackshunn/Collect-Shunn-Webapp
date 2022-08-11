@@ -29,13 +29,13 @@ export default function AddListBox(props){
             {(title !== "" || hovering) 
             ?
                 <>
-                <div className="text-white text-lg mx-auto">List Title:</div>
-                <ResizeTextBox className="mx-auto border border-black text-black text-lg bg-transparent min-w-[100px] rounded-lg" value={title} onChange={(event) => setTitle(event.target.value)} onKeyDown={handleKeyPress}/>
+                <div className="text-white text-4xl mx-auto">New List Title:</div>
+                <ResizeTextBox className="mx-auto border border-black text-customColor-orange text-4xl text-center bg-transparent min-w-[100px] rounded-lg " value={title} onChange={(event) => setTitle(event.target.value)} onKeyDown={handleKeyPress}/>
                 {displayError && <div className="mx-auto text-red-600 text-sm">Title cannot be empty</div>}
                 </>
 
             :
-                <img src={plusIcon} alt="Add New List" className="block mx-auto w-1/2 min-h-full"/>
+                <img src={plusIcon} alt="Add New List" className="block mx-auto w-1/3 min-h-full"/>
             }
             
         </div>
