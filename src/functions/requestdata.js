@@ -1,5 +1,5 @@
-export default async function getData(){
-    const searchResults = await fetch("/api/data",
+export default async function getData(userID){
+    const searchResults = await fetch(`/api/data?userID=${userID}`,
     {
         method:"GET",
     });

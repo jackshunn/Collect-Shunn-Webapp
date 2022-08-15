@@ -2,24 +2,24 @@ import List from './List.js';
 
 import saveIcon from "../images/floppy-disk-solid.svg";
 import FocusedList from "./FocusedList";
-import getDataFromDB from "../functions/requestdata.js";
+import getDataFromDB from "../functions/requestData.js";
 import saveDataToDB from '../functions/saveData.js';
 import React, {useState, useEffect} from 'react';
 import AddListBox from './AddListBox.js';
 
 
-export default function Main(){
+export default function Main(props){
     const [focusedListIndex, setFocusedListIndex] = useState(-1);
     const [data, setData] = useState({id:"", lists:[]});
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     
     useEffect( () => {
         const asyncFunc = async () => {
-            let databaseData = await getDataFromDB();
+            let databaseData = await getDataFromDB(props.userID);
             setData(databaseData);
         };
         asyncFunc();
-    }, [])
+    }, [props.userID])
 
     function saveData(event){
         saveDataToDB(data);
