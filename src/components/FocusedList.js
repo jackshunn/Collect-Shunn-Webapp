@@ -1,7 +1,8 @@
 import React from "react";
-import Item from "./Item.js"
+import Item from "./Item.js";
 import ResizeTextBox from "./ResizeTextBox.js";
-import AddNewItem from "./AddNewItem.js"
+import AddNewItem from "./AddNewItem.js";
+import trashIcon from "../images/circle-trash.svg";
 
 export default function FocusedList(props) {
 
@@ -30,12 +31,19 @@ export default function FocusedList(props) {
         event.stopPropagation();
     }
 
+    function handleDeleteItem(index){
+        const newList = {...props.list};
+        newList.items = newList.items.filter((item, i) => index !== i);
+        props.handleChange(newList);
+    }
+
     function generateItems(){
         return props.list.items.map( (value, index) => {
             return (
                 <div className="flex flex-1" key={index}>
                     <span className="text-white text-xl mt-7 ml-5">{index+1}.</span>
                     <Item item={value} handleChange={(updatedItem) => handleItemChange(updatedItem, index)} /> 
+                    <img src={trashIcon} alt="delete" className="h-10 self-center mr-3" onClick={() => handleDeleteItem(index)}/>
                 </div>
             )
         })

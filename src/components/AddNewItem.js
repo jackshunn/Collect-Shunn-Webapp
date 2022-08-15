@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import SearchIconToggle from "./SearchIconToggle";
 import callSearchAPI from "../functions/search";
-import MovieSearchItem from "./item-types/MovieSearchItem"
-import BookSearchItem from "./item-types/BookSearchItem"
-import SongSearchItem from "./item-types/SongSearchItem"
+import MovieSearchItem from "./item-types/MovieSearchItem";
+import BookSearchItem from "./item-types/BookSearchItem";
+import SongSearchItem from "./item-types/SongSearchItem";
+import Spinner from "./Spinner.js";
 
 export default function AddNewItem(props){
     const [expanded, setExpanded] = useState(false);
@@ -11,11 +12,17 @@ export default function AddNewItem(props){
     const [text, setText] = useState("");
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState();
-    const [searchTypes, setSearchTypes] = useState({movies:true, books:false, songs:false})
+    const [searchTypes, setSearchTypes] = useState({movies:true, books:false, songs:false});
+    const [loadingSearch, setLoadingSearch] = useState(false);
 
         function searchOnEnterPressed(event){
-            if (event.key === "Enter" && event.target.value){
-                callSearchAPI(event.target.value, searchTypes, setSearchResults);
+            if (event.key === "Enter" && event.target.value && !loadingSearch){
+                setLoadingSearch(true);
+                const func = async () => {
+                    await callSearchAPI(event.target.value, searchTypes, setSearchResults);
+                    setLoadingSearch(false);
+                };
+                func();
             }
         }
 
@@ -66,7 +73,8 @@ export default function AddNewItem(props){
                     <span className="mx-3 text-white">Search</span>
                     <input value={search} onChange={event => setSearch(event.target.value)} onKeyDown={searchOnEnterPressed} type="text" className="flex-1 bg-transparent border border-black rounded-md text-white" placeholder="Title (year)"></input>
                 </div>
-                {search && !searchResults && <div className="text-red-600 text-lg ml-44">Hit enter to search</div>}
+                {search && !searchResults && !loadingSearch && <div className="text-red-600 text-lg ml-44">Hit enter to search</div>}
+                {loadingSearch && <div className="mx-auto my-3 h-11 w-11"><Spinner /></div>}
                 {searchResults &&
                     <div className="flex gap-3 overflow-auto mx-3 max-w-full">
                         {generateSearchResultComponents(searchResults)}

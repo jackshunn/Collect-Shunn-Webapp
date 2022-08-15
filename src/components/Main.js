@@ -1,22 +1,24 @@
 import List from './List.js';
-
 import saveIcon from "../images/floppy-disk-solid.svg";
 import FocusedList from "./FocusedList";
 import getDataFromDB from "../functions/requestData.js";
 import saveDataToDB from '../functions/saveData.js';
 import React, {useState, useEffect} from 'react';
 import AddListBox from './AddListBox.js';
+import Spinner from './Spinner.js';
 
 
 export default function Main(props){
     const [focusedListIndex, setFocusedListIndex] = useState(-1);
     const [data, setData] = useState({id:"", lists:[]});
     const [unsavedChanges, setUnsavedChanges] = useState(false);
-    
+    const [loading, setLoading] = useState(true);
+
     useEffect( () => {
         const asyncFunc = async () => {
             let databaseData = await getDataFromDB(props.userID);
             setData(databaseData);
+            setLoading(false);
         };
         asyncFunc();
     }, [props.userID])
@@ -57,10 +59,21 @@ export default function Main(props){
         setUnsavedChanges(true)
     }
 
+    function handleDeleteList(index){
+        setData(prev => {
+            return ({
+                ...prev,
+                lists: prev.lists.filter((value, i) => index !== i),
+            })
+        })
+        setUnsavedChanges(true);
+    }
+
     function getLists(){
         let listComponents = data.lists.map( (list, index) => <List key={index} title={list.title} handleClick={(event) => {
             handleClick(index)
-            event.stopPropagation()}}/>
+            event.stopPropagation()}}
+            handleDeleteList={() => handleDeleteList(index)}/>
             );
 
         listComponents.push(
@@ -71,6 +84,8 @@ export default function Main(props){
     function handleOutsideClick(){
         setFocusedListIndex(-1)
     }
+    if(loading)
+        return <div className='h-32 w-32 m-auto'><Spinner /></div>
 
     return (
         <main className='flex-1 flex relative' onClick={handleOutsideClick}>

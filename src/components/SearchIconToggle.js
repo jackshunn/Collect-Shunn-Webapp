@@ -5,6 +5,19 @@ import songIcon from "../images/music-solid.svg";
 
 export default function SearchIconToggle(props){
     function toggleType(type){
+        if(props[type]){
+            let areAnyOthersSelected = false;
+            for (const [key, value] of Object.entries(props)){
+                if(key === type || key === "setSearchTypes")
+                    continue;
+                if(value){
+                    areAnyOthersSelected = true;
+                    break;
+                }
+            }
+            if(!areAnyOthersSelected)
+                return;
+        }
         props.setSearchTypes((prev) => {
             let prevTypes = {...prev};
             prevTypes[type] = !prevTypes[type];
