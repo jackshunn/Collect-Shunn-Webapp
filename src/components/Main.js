@@ -1,5 +1,6 @@
 import List from './List.js';
 import saveIcon from "../images/floppy-disk-solid.svg";
+import backArrow from "../images/arrow-left-long-solid.svg";
 import FocusedList from "./FocusedList";
 import getDataFromDB from "../functions/requestData.js";
 import saveDataToDB from '../functions/saveData.js';
@@ -9,7 +10,6 @@ import Spinner from './Spinner.js';
 
 
 export default function Main(props){
-    const [focusedListIndex, setFocusedListIndex] = useState(-1);
     const [data, setData] = useState({id:"", lists:[]});
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -22,6 +22,19 @@ export default function Main(props){
         };
         asyncFunc();
     }, [props.userID])
+
+    useEffect(() => {
+        if(unsavedChanges){
+            const alertUser = e => {
+                e.preventDefault()
+                e.returnValue = ''
+            }
+            window.addEventListener('beforeunload', alertUser)
+            return () => {
+            window.removeEventListener('beforeunload', alertUser)
+            }
+        }
+    }, [unsavedChanges])
 
     function saveData(event){
         saveDataToDB(data);
@@ -41,11 +54,11 @@ export default function Main(props){
             })
         })
         setUnsavedChanges(true);
-        setFocusedListIndex(numberOfListsBeforeAddingOne);
+        props.setFocusedListIndex(numberOfListsBeforeAddingOne);
     }
     
     function handleClick(index) {
-        setFocusedListIndex(index)
+        props.setFocusedListIndex(index)
     }
 
     function handleChangedData(index, changedList) {
@@ -82,23 +95,28 @@ export default function Main(props){
     }
 
     function handleOutsideClick(){
-        setFocusedListIndex(-1)
+        props.setFocusedListIndex(-1)
     }
     if(loading)
         return <div className='h-32 w-32 m-auto'><Spinner /></div>
 
     return (
         <main className='flex-1 flex relative' onClick={handleOutsideClick}>
-            {focusedListIndex === -1 ? 
+            {props.focusedListIndex === -1 ? 
                 <div className="flex-1 m-16 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-16">
                     {getLists()}
                 </div> :
+                <>
                 <div className='p-16 flex-1 flex w-screen'>
                     <FocusedList 
-                    list={data.lists[focusedListIndex]} 
-                    handleChange={(updatedList) => handleChangedData(focusedListIndex, updatedList)}
+                    list={data.lists[props.focusedListIndex]} 
+                    handleChange={(updatedList) => handleChangedData(props.focusedListIndex, updatedList)}
                     />
                 </div>
+                <div className="h-12 absolute top-3 left-3 bg-customColor-orange p-1.5 rounded-2xl">
+                    <img className="h-full" src={backArrow} alt="<-"/>
+                </div>
+                </>
             }
             {unsavedChanges && 
                 <div  onClick={saveData} className="h-12 absolute top-3 right-3 bg-customColor-orange p-1.5 rounded-full">
